@@ -1,15 +1,13 @@
-from ObjectClassifier import ObjectDataset
+from ObjectClassifier import ObjectDataset, ClassifierModel
 import Configuration
 import os
 import numpy as np
-from PIL import Image
 
 # Set the environment variable to suppress TensorFlow warnings
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 
 def trainAndSave():
-    appConfig = Configuration.config["app"]
     modelConfig = Configuration.config["model"]
     datasetConfig = Configuration.config["dataset"]
 
@@ -25,7 +23,7 @@ def trainAndSave():
     classNames = roadSignDataset.getClassNames()
     nClasses = len(classNames)
 
-    np.savetxt(appConfig["CLASS_NAME_FILE"], classNames, fmt="%s")
+    np.savetxt(datasetConfig["CLASS_NAME_FILE"], classNames, fmt="%s")
 
     trainData, validData, testData = roadSignDataset.getData(
         trainRatio=0.8, validRatio=0.2
@@ -38,6 +36,21 @@ def trainAndSave():
 
     roadSignDataset.plotClassDistribution()
     roadSignDataset.plotExamplesFromDataset(7)
+
+    model = ClassifierModel.ClassifierModel(
+        inputWidth=datasetConfig["IMAGE_HEIGHT"],
+        inputHeight=datasetConfig["IMAGE_HEIGHT"],
+        nClasses=nClasses,
+    )
+    model.plotModel()
+    model.train(
+        nEpochs=modelConfig["EPOCHS"],
+        trainDataset=trainData,
+        validDataset=validData,
+        testDataset=testData,
+    )
+    model.plotTrainingHistory()
+    model.saveModel(filePath=modelConfig["MODEL_PATH"])
 
 
 if __name__ == "__main__":
