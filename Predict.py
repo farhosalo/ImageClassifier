@@ -1,0 +1,51 @@
+from ObjectClassifier import ObjectPredictor
+import Configuration
+import os
+import shutil
+import logging
+import argparse
+import filetype
+
+# Set the environment variable to suppress TensorFlow warnings
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
+
+def isImage(filename: str):
+    if filename is None or not os.path.isfile(filename):
+        return False
+    mime = filetype.guess_mime(filename)
+    if mime is None:
+        return False
+    return mime.startswith("image/")
+
+
+def loadAndPredict():
+    parser = argparse.ArgumentParser(
+        prog="ObjectClassifier",
+        description="Predicts the class of an object passed as input.",
+    )
+
+    parser.add_argument("-i", "--input", required=True, help="Path to the input image")
+
+    args = parser.parse_args()
+    if not os.path.exists(args.input):
+        logging.fatal("Input path does not exist")
+        return
+    if not isImage(args.input):
+        logging.fatal("Input file is not an image")
+        return
+
+    modelConfig = Configuration.config["model"]
+    datasetConfig = Configuration.config["dataset"]
+
+    roadSignPredictor = ObjectPredictor.ObjectPredictor(
+        modelPath=modelConfig["MODEL_PATH"],
+        classNamePath=datasetConfig["CLASS_NAME_FILE"],
+    )
+
+    pred = roadSignPredictor.predict(args.input)
+    print(pred)
+
+
+if __name__ == "__main__":
+    loadAndPredict()
