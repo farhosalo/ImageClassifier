@@ -1,6 +1,7 @@
 from ObjectClassifier import ObjectDataset, ClassifierModel
 import Configuration
 import os
+import logging
 import numpy as np
 
 # Set the environment variable to suppress TensorFlow warnings
@@ -29,10 +30,10 @@ def trainAndSave():
         trainRatio=0.8, validRatio=0.2
     )
 
-    print(f"\nTrain data size={len(list(trainData)) * batchSize}")
-    print(f"test data size={len(list(testData)) * batchSize}")
-    print(f"and validation data size={len(list(validData)) * batchSize}")
-    print(f"Number of classes = {nClasses}\n")
+    logging.info(f"\nTrain data size={len(list(trainData)) * batchSize}")
+    logging.info(f"test data size={len(list(testData)) * batchSize}")
+    logging.info(f"and validation data size={len(list(validData)) * batchSize}")
+    logging.info(f"Number of classes = {nClasses}\n")
 
     roadSignDataset.plotClassDistribution()
     roadSignDataset.plotExamplesFromDataset(7)

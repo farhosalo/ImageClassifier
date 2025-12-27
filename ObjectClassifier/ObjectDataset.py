@@ -2,7 +2,7 @@ import tensorflow as tf
 import os.path
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
+import logging
 
 
 class ObjectDataset:
@@ -94,11 +94,10 @@ class ObjectDataset:
                     tf_example = self.__createExample(image, label)
                     writer.write(tf_example.SerializeToString())
         else:
-            print("File already exists")
+            logging.info("File already exists")
 
     def getDataFromRecords(self, path, trainRatio=0.7, validRatio=0.2):
         if not os.path.isfile(path):
-            print("File does not exist")
             raise OSError("File does not exist")
 
         # Create a dataset from the TFRecord file.

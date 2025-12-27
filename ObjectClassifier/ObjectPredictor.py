@@ -2,6 +2,7 @@ import tensorflow as tf
 import os
 import numpy as np
 from PIL import Image
+import logging
 
 
 class ObjectPredictor:
@@ -29,7 +30,7 @@ class ObjectPredictor:
 
         # Load the model
         self.__Model__ = tf.keras.models.load_model(modelPath)
-        print(f"Model loaded from {modelPath}")
+        logging.info(f"Model loaded from {modelPath}")
 
     def __loadClassNames__(self, classNamePath=None):
         # check if the file exists
@@ -46,10 +47,8 @@ class ObjectPredictor:
         img = np.array(img)
         # preProcessedImage = testDatase.map(lambda X, Y: (common.preprocess(X), Y))
         preProcessedImage = self.__Preprocess__(img)
-        # print(preProcessedImage.shape)
         prediction = self.__Model__.predict(preProcessedImage[None, :, :])
         if prediction.max() > 0.95:
             yProba = np.argmax(prediction)
             return self.__ClassName__[yProba]
         return "Unknown"
-        # print(self.__ClassName__[yProba])

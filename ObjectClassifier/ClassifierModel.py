@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 import math
+import logging
 
 from tensorflow.keras.applications.xception import Xception as BaseModel
 from tensorflow.keras.applications.xception import preprocess_input as preprocess_input
@@ -81,14 +82,14 @@ class ClassifierModel:
         momentum = 0.9
 
         for phase, config in self.__TrainingPhases__.items():
-            print(f"\nTraining phase: {phase}")
+            logging.info(f"\nTraining phase: {phase}")
 
             if config["freezeBaseModel"]:
                 self.__BaseModel__.trainable = False
             else:
                 self.__BaseModel__.trainable = True
                 finetuneAt = (2 * len(self.__BaseModel__.layers)) // 3
-                print(f"Fine tune from layer {finetuneAt}")
+                logging.info(f"Fine tune from layer {finetuneAt}")
                 for layer in self.__BaseModel__.layers[:finetuneAt]:
                     layer.trainable = False
 
@@ -111,10 +112,10 @@ class ClassifierModel:
             stop = time.time()
             learningDuration = (stop - start) / 60
 
-            print(f"{phase} learning phase took: {learningDuration} minutes")
+            logging.info(f"{phase} learning phase took: {learningDuration} minutes")
 
             if len(testDataset) != 0:
-                print("Evaluate the model on test data")
+                logging.info("Evaluate the model on test data")
                 self.__Model__.evaluate(testDataset)
 
     def plotTrainingHistory(self):
@@ -122,7 +123,7 @@ class ClassifierModel:
         nRows = len(self.__TrainingPhases__)
         for phase, config in self.__TrainingPhases__.items():
             if config["trainingHistory"] is None:
-                print(f"No training history for {phase} phase available.")
+                logging.warn(f"No training history for {phase} phase available.")
                 nRows -= 1
                 continue
             for metric in ["accuracy", "loss"]:
@@ -144,4 +145,4 @@ class ClassifierModel:
         os.makedirs(os.path.dirname(filePath), exist_ok=True)
         # Save the model
         self.__Model__.save(filePath)
-        print(f"Model saved to {filePath}")
+        logging.info(f"Model saved to {filePath}")
