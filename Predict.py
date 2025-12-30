@@ -1,4 +1,4 @@
-from ObjectClassifier import ObjectPredictor
+from ImageClassifier import Predictor
 import Configuration
 import os
 import shutil
@@ -38,12 +38,12 @@ def loadAndPredict():
     modelConfig = Configuration.config["model"]
     datasetConfig = Configuration.config["dataset"]
 
-    roadSignPredictor = ObjectPredictor.ObjectPredictor(
+    imagePredictor = Predictor.Predictor(
         modelPath=modelConfig["MODEL_PATH"],
         classNamePath=datasetConfig["CLASS_NAME_FILE"],
     )
 
-    pred = roadSignPredictor.predict(args.input)
+    pred = imagePredictor.predict(args.input)
     print(pred)
 
 
