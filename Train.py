@@ -16,7 +16,7 @@ def trainAndSave():
         raise ValueError("Model or Dataset configuration is missing.")
 
     datasetDir = datasetConfig.get("DATASET_DIR")
-    if datasetDir is None or not isinstance(datasetDir, str):
+    if datasetDir in [None, ""] or not isinstance(datasetDir, str):
         datasetDir = "Data"
         logging.warning(
             f"Invalid or missing DATASET_DIR in configuration. Using default dataset directory {datasetDir}."
@@ -32,7 +32,7 @@ def trainAndSave():
         )
 
     classNamesFile = datasetConfig.get("CLASS_NAME_FILE")
-    if classNamesFile is None or not isinstance(classNamesFile, str):
+    if classNamesFile in [None, ""] or not isinstance(classNamesFile, str):
         classNamesFile = "ClassName.txt"
         logging.warning(
             f"Invalid or missing CLASS_NAME_FILE in configuration. Using default {classNamesFile}."
@@ -62,8 +62,9 @@ def trainAndSave():
         logging.warning(
             f"Invalid or missing EPOCHS in configuration, using default {numberOfEpochs}."
         )
+
     modelPath = modelConfig.get("MODEL_PATH")
-    if modelPath is None or not isinstance(modelPath, str):
+    if modelPath in [None, ""] or not isinstance(modelPath, str):
         modelPath = "ImageClassifier.keras"
         logging.warning(
             f"Invalid or missing MODEL_PATH in configuration, using default {modelPath}."

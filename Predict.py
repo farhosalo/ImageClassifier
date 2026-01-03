@@ -42,14 +42,14 @@ def loadAndPredict():
         raise ValueError("Model or Dataset configuration is missing.")
 
     classNamesFile = datasetConfig.get("CLASS_NAME_FILE")
-    if classNamesFile is None or not isinstance(classNamesFile, str):
+    if classNamesFile in [None, ""] or not isinstance(classNamesFile, str):
         classNamesFile = "ClassName.txt"
         logging.warning(
             f"Invalid or missing CLASS_NAME_FILE in configuration. Using default {classNamesFile}."
         )
 
     modelPath = modelConfig.get("MODEL_PATH")
-    if modelPath is None or not isinstance(modelPath, str):
+    if modelPath in [None, ""] or not isinstance(modelPath, str):
         modelPath = "ImageClassifier.keras"
         logging.warning(
             f"Invalid or missing MODEL_PATH in configuration, using default {modelPath}."
