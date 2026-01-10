@@ -1,7 +1,6 @@
 from ImageClassifier import Predictor
 import Configuration
 import os
-import shutil
 import logging
 import argparse
 import filetype
